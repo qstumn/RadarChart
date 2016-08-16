@@ -64,7 +64,7 @@ setVertexText | 设置顶点文字内容
  addData | 添加数据
  
 ###5. 添加数据
- 1. 创建并数据
+ 1. 创建并添加数据
  ```
 List<Float> values = new ArrayList<>();
 Collections.addAll(values, 3.2f, 6.7f, 2f, 7f, 5.6f);
