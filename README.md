@@ -27,7 +27,9 @@
 
 ## how to use:
 ###1. gradle
-     `compile 'q.rorbin:RadarView:1.0.0'`
+```
+     compile 'q.rorbin:RadarView:1.0.0'
+```
 
 ###2. xml
 ```
