@@ -6,7 +6,7 @@
 ###一些特性
 * 支持手势旋转（可关闭）
 
-* 支持动画的方式的方式添加展现数据
+* 支持动画的方式添加展现数据
 
 * 支持对各层雷达网添加背景
 
@@ -27,7 +27,7 @@
 
 ## how to use:
 ###1. gradle
-`compile 'q.rorbin:RadarView:1.0.0'`
+     `compile 'q.rorbin:RadarView:1.0.0'`
 
 ###2. xml
 ```
