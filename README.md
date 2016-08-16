@@ -30,11 +30,12 @@
 `compile 'q.rorbin:RadarView:1.0.0'`
 
 ###2. xml
+```
      <rorbin.q.radarview.RadarView
         android:id="@+id/radarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    
+```    
 
 ###3. 属性说明
 
@@ -62,12 +63,13 @@ setVertexText | 设置顶点文字内容
  
 ###5. 添加数据
  1. 创建并数据
- 
-	   `List<Float> values = new ArrayList<>();
-        Collections.addAll(values, 3.2f, 6.7f, 2f, 7f, 5.6f);
-        RadarData data = new RadarData(values);
-         mRadarView.addData(data);`
-        
+ ```
+List<Float> values = new ArrayList<>();
+Collections.addAll(values, 3.2f, 6.7f, 2f, 7f, 5.6f);
+RadarData data = new RadarData(values);
+mRadarView.addData(data);
+``` 
+
  2. 方法说明
  
   code | 说明
