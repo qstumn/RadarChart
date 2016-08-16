@@ -69,6 +69,7 @@ setVertexText | 设置顶点文字内容
          mRadarView.addData(data);`
         
  2. 方法说明
+ 
   code | 说明
   --- | ---
   setLabel | 数据的标注
