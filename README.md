@@ -83,3 +83,5 @@ mRadarView.addData(data);
   setValueTextSize | 描述的文字大小
   setVauleTextColor | 描述的文字颜色
        
+#LICENSE
+###[See](https://github.com/qstumn/RadarView/blob/master/LICENSE)
