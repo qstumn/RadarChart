@@ -258,30 +258,17 @@ public class RadarView extends View {
     }
 
     public void animeValue(int duration) {
-        for (int i = 0; i < mRadarData.size(); i++) {
-            RadarData data = mRadarData.get(i);
-            ValueAnimator anime = ValueAnimator.ofFloat(0, 1f);
-            final List<Float> values = data.getValue();
-            final List<Float> values2 = new ArrayList<>(values);
-            anime.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator animation) {
-                    float percent = Float.parseFloat(animation.getAnimatedValue().toString());
-                    for (int i = 0; i < values.size(); i++) {
-                        values.set(i, values2.get(i) * percent);
-                    }
-                    invalidate();
-                }
-            });
-            anime.setDuration(duration);
-            anime.start();
-        }
+        AnimeUtil.animeValue(this, AnimeUtil.AnimeType.ZOOM, duration);
     }
 
     public void addData(RadarData data) {
         mRadarData.add(data);
         initData(data);
         animeValue(2000);
+    }
+
+    protected List<RadarData> getRadarData() {
+        return mRadarData;
     }
 
     private void initData(RadarData data) {
@@ -474,10 +461,10 @@ public class RadarView extends View {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (Math.abs(velocityX) > Math.abs(velocityY)) {
                 mFlingPoint = e2.getX();
-                mScroller.fling((int) e2.getX(), 0, (int) velocityX, 0, (int) (-mPerimeter + e2.getX()), (int) (mPerimeter / 2 + e2.getX()), 0, 0);
+                mScroller.fling((int) e2.getX(), 0, (int) velocityX, 0, (int) (-mPerimeter + e2.getX()), (int) (mPerimeter + e2.getX()), 0, 0);
             } else if (Math.abs(velocityY) > Math.abs(velocityX)) {
                 mFlingPoint = e2.getY();
-                mScroller.fling(0, (int) e2.getY(), 0, (int) velocityY, 0, 0, (int) (-mPerimeter + e2.getY()), (int) (mPerimeter / 2 + e2.getY()));
+                mScroller.fling(0, (int) e2.getY(), 0, (int) velocityY, 0, 0, (int) (-mPerimeter + e2.getY()), (int) (mPerimeter + e2.getY()));
             }
             invalidate();
             return super.onFling(e1, e2, velocityX, velocityY);

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="RadarView">
-        <attr name="radar_layer" format="integer" />
+        <attr name="radar_layer" format="integer"/>
         <attr name="rotation_enable" format="boolean" />
         <attr name="web_mode" format="enum">
             <enum name="polygon" value="1" />

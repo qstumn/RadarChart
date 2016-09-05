@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Collections.addAll(values, 3f, 6f, 2f, 7f, 5f, 1f, 4f, 3f, 8f, 5f);
         RadarData data = new RadarData(values);
         mRadarView.addData(data);
+
     }
 
     @Override
