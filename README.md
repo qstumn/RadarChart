@@ -1,6 +1,13 @@
 # RadarView
 一个可以自由定制、旋转交互的Android雷达图Lib
 
+##Change Log
+ ```
+v1.0.1
+1、修复addData添加多组数据时，只有最后一组数据显示出来的BUG
+2、修复animeValue方法重复执行时会错误的丢失数据的BUG
+```
+
 ![](https://github.com/qstumn/RadarView/blob/master/logo.png?raw=true)
 
 ###一些特性
