@@ -1,19 +1,16 @@
 package rorbin.q.radarview;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.support.annotation.IntRange;
 import android.support.v4.view.GestureDetectorCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import rorbin.q.radarview.util.AnimeUtil;
+import rorbin.q.radarview.util.RotateUtil;
 
 /**
  * @author changhai qiu
@@ -69,6 +69,8 @@ public class RadarView extends View {
     private double mRotateOrientation;
     private boolean mRotationEnable;
 
+    private AnimeUtil mAnimeUtil;
+
     public RadarView(Context context) {
         this(context, null);
     }
@@ -100,6 +102,7 @@ public class RadarView extends View {
     }
 
     private void init() {
+        mAnimeUtil = new AnimeUtil(this);
         mScroller = new Scroller(mContext);
         mDetector = new GestureDetectorCompat(mContext, new GestureListener());
         mDetector.setIsLongpressEnabled(false);
@@ -258,17 +261,26 @@ public class RadarView extends View {
     }
 
     public void animeValue(int duration) {
-        AnimeUtil.animeValue(this, AnimeUtil.AnimeType.ZOOM, duration);
+        for (RadarData radarData : mRadarData) {
+            animeValue(duration, radarData);
+        }
+    }
+
+    public void animeValue(int duration, RadarData data) {
+        if (!mAnimeUtil.isPlaying(data)) {
+            mAnimeUtil.animeValue(AnimeUtil.AnimeType.ZOOM, duration, data);
+        }
     }
 
     public void addData(RadarData data) {
         mRadarData.add(data);
         initData(data);
-        animeValue(2000);
+        animeValue(2000, data);
     }
 
-    protected List<RadarData> getRadarData() {
-        return mRadarData;
+    public void removeRadarData(RadarData data) {
+        mRadarData.remove(data);
+        invalidate();
     }
 
     private void initData(RadarData data) {

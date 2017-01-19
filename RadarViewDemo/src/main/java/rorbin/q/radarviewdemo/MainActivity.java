@@ -32,8 +32,11 @@ public class MainActivity extends AppCompatActivity {
         List<Float> values = new ArrayList<>();
         Collections.addAll(values, 3f, 6f, 2f, 7f, 5f, 1f, 4f, 3f, 8f, 5f);
         RadarData data = new RadarData(values);
+        List<Float> values2 = new ArrayList<>();
+        Collections.addAll(values2, 7f, 1f, 4f, 2f, 8f, 3f, 9f, 6f, 5f, 3f);
+        RadarData data2 = new RadarData(values2);
         mRadarView.addData(data);
-
+        mRadarView.addData(data2);
     }
 
     @Override

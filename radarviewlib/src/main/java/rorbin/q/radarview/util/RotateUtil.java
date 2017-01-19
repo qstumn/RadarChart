@@ -1,4 +1,4 @@
-package rorbin.q.radarview;
+package rorbin.q.radarview.util;
 
 import android.graphics.PointF;
 import android.util.Log;
@@ -12,7 +12,7 @@ import android.widget.Scroller;
 public class RotateUtil {
     public static final double CIRCLE_ANGLE = 2 * Math.PI;
 
-    protected static double getRotateAngle(PointF p1, PointF p2, PointF mPointCenter) {
+    public static double getRotateAngle(PointF p1, PointF p2, PointF mPointCenter) {
         int q1 = getQuadrant(p1, mPointCenter);
         int q2 = getQuadrant(p2, mPointCenter);
         double angle1 = getAngle(p1, mPointCenter);

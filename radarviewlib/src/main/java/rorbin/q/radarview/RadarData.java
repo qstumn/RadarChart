@@ -4,6 +4,8 @@ package rorbin.q.radarview;
 import java.util.ArrayList;
 import java.util.List;
 
+import rorbin.q.radarview.util.RandomColor;
+
 /**
  * @author changhai qiu
  *         Email:qstumn@163.com

@@ -23,7 +23,7 @@ publish {
     userOrg = 'qstumn'
     groupId = 'q.rorbin'
     artifactId = 'RadarView'
-    publishVersion = '1.0.0'
+    publishVersion = '1.0.1'
     desc = 'this is a can rotate radar chart for android'
     website = 'https://github.com/qstumn/RadarView'
 }
