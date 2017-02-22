@@ -39,8 +39,8 @@ v1.0.1
 ```
 
 ###2. xml
-```
-     <rorbin.q.radarview.RadarView
+```xml
+     <rorbin.q.radarview.RadarView
         android:id="@+id/radarView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -72,7 +72,7 @@ setVertexText | 设置顶点文字内容
  
 ###5. 添加数据
  1. 创建并添加数据
- ```
+```java
 List<Float> values = new ArrayList<>();
 Collections.addAll(values, 3.2f, 6.7f, 2f, 7f, 5.6f);
 RadarData data = new RadarData(values);
