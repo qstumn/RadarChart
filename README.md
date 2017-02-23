@@ -35,7 +35,7 @@ v1.0.1
 ## how to use:
 ###1. gradle
 ```groovy
-     compile 'q.rorbin:RadarView:1.0.0'
+     compile 'q.rorbin:RadarView:1.0.1'
 ```
 
 ###2. xml
