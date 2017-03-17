@@ -3,7 +3,7 @@
 
 ![](https://github.com/qstumn/RadarView/blob/master/logo.png?raw=true)
 
-###一些特性
+### 一些特性
 * 支持手势旋转（可关闭）
 
 * 支持动画的方式添加展现数据
@@ -26,13 +26,13 @@
 
 
 ## how to use:
-###1. gradle
+### 1. gradle
 ```groovy
      compile 'q.rorbin:RadarView:VERSION_CODE'
 ```
 VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
 
-###2. xml
+### 2. xml
 ```xml
      <rorbin.q.radarview.RadarView
         android:id="@+id/radarView"
@@ -40,7 +40,7 @@ VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
         android:layout_height="match_parent"/>
 ```    
 
-###3. 属性说明
+### 3. 属性说明
 
 xml | code | 说明
 ---|---|---
@@ -56,7 +56,7 @@ app:vertex_text_size | setVertexTextSize | 顶点文字大小
 app:vertex_text_offset | setVertexTextOffset | 顶点文字距最外层网偏移量
 注：各属性均有默认值
 
-###4. 方法说明
+### 4. 方法说明
   code | 说明
   --- | ---
 setLayerColor | 设置雷达网各层颜色
@@ -65,7 +65,7 @@ animeValue | 展现一次数据添加动画
 addData | 添加数据
 setEmptyHint | 设置空数据时的提示
  
-###5. 添加数据
+### 5. 添加数据
  1. 创建并添加数据
 ```java
 List<Float> values = new ArrayList<>();
@@ -85,7 +85,7 @@ mRadarView.addData(data);
   setValueTextSize | 描述的文字大小
   setVauleTextColor | 描述的文字颜色
        
-#LICENSE
+# LICENSE
 ```
 Copyright 2016, RorbinQiu
 
