@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mRadarView = (RadarView) findViewById(R.id.radarView);
-
+        mRadarView.setEmptyHint("无数据");
         List<Integer> layerColor = new ArrayList<>();
         Collections.addAll(layerColor, 0x3300bcd4, 0x3303a9f4, 0x335677fc, 0x333f51b5, 0x33673ab7);
         mRadarView.setLayerColor(layerColor);

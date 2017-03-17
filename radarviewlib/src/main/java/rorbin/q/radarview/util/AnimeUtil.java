@@ -3,25 +3,26 @@ package rorbin.q.radarview.util;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.support.v4.util.ArrayMap;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import rorbin.q.radarview.RadarData;
 import rorbin.q.radarview.RadarView;
+
 
 /**
  * Created by chqiu on 2016/9/5.
  */
 public class AnimeUtil {
     private WeakReference<RadarView> mWeakRadarView;
-    private ArrayMap<RadarData, ValueAnimator> mAnimes;
+    private HashMap<RadarData, ValueAnimator> mAnimes;
 
     public AnimeUtil(RadarView view) {
         mWeakRadarView = new WeakReference<>(view);
-        mAnimes = new ArrayMap<>();
+        mAnimes = new HashMap<>();
     }
 
     public void animeValue(AnimeType type, int duration, RadarData data) {

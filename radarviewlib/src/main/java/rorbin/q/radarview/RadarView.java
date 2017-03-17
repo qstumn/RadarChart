@@ -7,10 +7,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.support.annotation.IntRange;
-import android.support.v4.view.GestureDetectorCompat;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,8 +29,6 @@ import rorbin.q.radarview.util.RotateUtil;
  */
 public class RadarView extends View {
     private Context mContext;
-    private int mWidth;
-    private int mHeight;
 
     private int mWebMode;
     public static final int WEB_MODE_POLYGON = 1;
@@ -62,14 +59,19 @@ public class RadarView extends View {
     private TextPaint mVertexTextPaint;
     private Paint mValuePaint;
     private TextPaint mValueTextPaint;
+    private Path mRadarPath;
 
-    private GestureDetectorCompat mDetector;
+    private GestureDetector mDetector;
     private Scroller mScroller;
     private float mFlingPoint;
     private double mRotateOrientation;
     private boolean mRotationEnable;
 
+    private String mEmptyHint = "no data";
+    private String mMaxLengthVertexText;
+
     private AnimeUtil mAnimeUtil;
+
 
     public RadarView(Context context) {
         this(context, null);
@@ -102,9 +104,10 @@ public class RadarView extends View {
     }
 
     private void init() {
+        mRadarPath = new Path();
         mAnimeUtil = new AnimeUtil(this);
         mScroller = new Scroller(mContext);
-        mDetector = new GestureDetectorCompat(mContext, new GestureListener());
+        mDetector = new GestureDetector(mContext, new GestureListener());
         mDetector.setIsLongpressEnabled(false);
 
         mRadarData = new ArrayList<>();
@@ -116,7 +119,9 @@ public class RadarView extends View {
         mValuePaint = new Paint();
         mVertexTextPaint = new TextPaint();
         mValueTextPaint = new TextPaint();
-        initPaint();
+        mRadarLinePaint.setAntiAlias(true);
+        mVertexTextPaint.setAntiAlias(true);
+        mValueTextPaint.setFakeBoldText(true);
     }
 
     private void initLayerColor() {
@@ -131,27 +136,14 @@ public class RadarView extends View {
         }
     }
 
-    private void initPaint() {
-        mRadarLinePaint.setStyle(Paint.Style.STROKE);
-        mRadarLinePaint.setStrokeWidth(mRadarLineWidth);
-        mRadarLinePaint.setColor(mRadarLineColor);
-        mRadarLinePaint.setAntiAlias(true);
-
-        mLayerPaint.setStyle(Paint.Style.FILL);
-
-        mVertexTextPaint.setColor(mVertexTextColor);
-        mVertexTextPaint.setTextSize(mVertexTextSize);
-        mVertexTextPaint.setAntiAlias(true);
-
-        mValuePaint.setStrokeWidth(dp2px(1));
-        mValueTextPaint.setFakeBoldText(true);
-    }
-
     public int getWebMode() {
         return mWebMode;
     }
 
-    public void setWebMode(@IntRange(from = WEB_MODE_POLYGON, to = WEB_MODE_CIRCLE) int mWebMode) {
+    public void setWebMode(int mWebMode) {
+        if (mWebMode != WEB_MODE_POLYGON && mWebMode != WEB_MODE_CIRCLE) {
+            throw new IllegalStateException("only support WEB_MODE_POLYGON or WEB_MODE_CIRCLE");
+        }
         this.mWebMode = mWebMode;
         invalidate();
     }
@@ -162,7 +154,6 @@ public class RadarView extends View {
 
     public void setRadarLineColor(int radarLineColor) {
         this.mRadarLineColor = radarLineColor;
-        mRadarLinePaint.setColor(mRadarLineColor);
         invalidate();
     }
 
@@ -172,7 +163,6 @@ public class RadarView extends View {
 
     public void setRadarLineWidth(float radarLineWidth) {
         this.mRadarLineWidth = radarLineWidth;
-        mRadarLinePaint.setStrokeWidth(mRadarLineWidth);
         invalidate();
     }
 
@@ -229,6 +219,7 @@ public class RadarView extends View {
 
     public void setVertexText(List<String> vertexText) {
         this.mVertexText = vertexText;
+        initVertexText();
         invalidate();
     }
 
@@ -238,7 +229,6 @@ public class RadarView extends View {
 
     public void setVertexTextColor(int vertexTextColor) {
         this.mVertexTextColor = vertexTextColor;
-        mVertexTextPaint.setColor(mVertexTextColor);
         invalidate();
     }
 
@@ -248,7 +238,6 @@ public class RadarView extends View {
 
     public void setVertexTextSize(float vertexTextSize) {
         this.mVertexTextSize = vertexTextSize;
-        mVertexTextPaint.setTextSize(mVertexTextSize);
         invalidate();
     }
 
@@ -278,6 +267,15 @@ public class RadarView extends View {
         animeValue(2000, data);
     }
 
+    public void setEmptyHint(String hint) {
+        mEmptyHint = hint;
+        invalidate();
+    }
+
+    public String getEmptyHint() {
+        return mEmptyHint;
+    }
+
     public void removeRadarData(RadarData data) {
         mRadarData.remove(data);
         invalidate();
@@ -295,98 +293,131 @@ public class RadarView extends View {
             mMaxVertex = valueSize;
         }
         mAngle = 2 * Math.PI / mMaxVertex;
+        initVertexText();
+    }
+
+    private void initVertexText() {
         if (mVertexText == null || mVertexText.size() == 0) {
             mVertexText = new ArrayList<>();
-            for (int i = 0; i < valueSize; i++) {
+            for (int i = 0; i < mMaxVertex; i++) {
                 char text = (char) ('A' + i);
                 mVertexText.add(String.valueOf(text));
             }
-        } else if (mVertexText.size() < valueSize) {
-            int size = valueSize - mVertexText.size();
+        } else if (mVertexText.size() < mMaxVertex) {
+            int size = mMaxVertex - mVertexText.size();
             for (int i = 0; i < size; i++) {
                 mVertexText.add("");
             }
         }
+        mMaxLengthVertexText = Collections.max(mVertexText, new Comparator<String>() {
+            @Override
+            public int compare(String lhs, String rhs) {
+                return lhs.length() - rhs.length();
+            }
+        });
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         if (mRadarData.size() == 0) {
-            String hint = "no data";
-            float hintWidth = mValueTextPaint.measureText(hint);
-            canvas.drawText(hint, mPointCenter.x - hintWidth / 2, mPointCenter.y, mValueTextPaint);
+            mValueTextPaint.setTextSize(dp2px(16));
+            float hintWidth = mValueTextPaint.measureText(mEmptyHint);
+            canvas.drawText(mEmptyHint, mPointCenter.x - hintWidth / 2, mPointCenter.y, mValueTextPaint);
         } else {
+            initPaint();
             calcRadius();
             drawRadar(canvas);
             drawData(canvas);
         }
     }
 
+    private void initPaint() {
+        mRadarLinePaint.setStrokeWidth(mRadarLineWidth);
+        mRadarLinePaint.setColor(mRadarLineColor);
+        mRadarLinePaint.setStyle(Paint.Style.STROKE);
+        mVertexTextPaint.setColor(mVertexTextColor);
+        mVertexTextPaint.setTextSize(mVertexTextSize);
+        mValuePaint.setStrokeWidth(dp2px(1));
+        mLayerPaint.setStyle(Paint.Style.FILL);
+    }
+
     private void drawRadar(Canvas canvas) {
-        drawWeb(canvas);
-        drawLines(canvas);
+        if (mWebMode == WEB_MODE_POLYGON) {
+            drawWeb(canvas);
+        } else if (mWebMode == WEB_MODE_CIRCLE) {
+            drawCircle(canvas);
+        }
+        drawRadarLine(canvas);
     }
 
     private void drawWeb(Canvas canvas) {
-        if (mWebMode == WEB_MODE_POLYGON) {
-            for (int i = mLayer; i >= 1; i--) {
-                float radius = mRadius / mLayer * i;
-                Path p = new Path();
-                for (int j = 1; j <= mMaxVertex; j++) {
-                    float x = (float) (mPointCenter.x + Math.sin(mAngle * j + mRotateAngle) * radius);
-                    float y = (float) (mPointCenter.y + Math.cos(mAngle * j + mRotateAngle) * radius);
-                    if (j == 1) {
-                        p.moveTo(x, y);
-                    } else {
-                        p.lineTo(x, y);
-                    }
-                }
-                p.close();
-                mLayerPaint.setColor(mLayerColor.get(i - 1));
-                canvas.drawPath(p, mLayerPaint);
-                if (mRadarLineEnable) {
-                    canvas.drawPath(p, mRadarLinePaint);
+        for (int i = mLayer; i >= 1; i--) {
+            float radius = mRadius / mLayer * i;
+            int layerColor = mLayerColor.get(i - 1);
+            mRadarPath.reset();
+            for (int j = 1; j <= mMaxVertex; j++) {
+                double angleSin = Math.sin(mAngle * j + mRotateAngle);
+                double angleCos = Math.cos(mAngle * j + mRotateAngle);
+                float x = (float) (mPointCenter.x + angleSin * radius);
+                float y = (float) (mPointCenter.y + angleCos * radius);
+                if (j == 1) {
+                    mRadarPath.moveTo(x, y);
+                } else {
+                    mRadarPath.lineTo(x, y);
                 }
             }
-        } else if (mWebMode == WEB_MODE_CIRCLE) {
-            for (int i = mLayer; i >= 1; i--) {
-                float radius = mRadius / mLayer * i;
-                mLayerPaint.setColor(mLayerColor.get(i - 1));
-                canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mLayerPaint);
-                if (mRadarLineEnable) {
-                    canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mRadarLinePaint);
-                }
+            mRadarPath.close();
+            if (layerColor != Color.TRANSPARENT) {
+                mLayerPaint.setColor(layerColor);
+                canvas.drawPath(mRadarPath, mLayerPaint);
+            }
+            if (mRadarLineEnable) {
+                canvas.drawPath(mRadarPath, mRadarLinePaint);
             }
         }
     }
 
-    private void drawLines(Canvas canvas) {
-        drawVertex(canvas);
+    private void drawCircle(Canvas canvas) {
+        for (int i = mLayer; i >= 1; i--) {
+            float radius = mRadius / mLayer * i;
+            int layerColor = mLayerColor.get(i - 1);
+            if (layerColor != Color.TRANSPARENT) {
+                mLayerPaint.setColor(layerColor);
+                canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mLayerPaint);
+            }
+            if (mRadarLineEnable) {
+                canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mRadarLinePaint);
+            }
+        }
+    }
+
+    private void drawRadarLine(Canvas canvas) {
+        for (int i = 1; i <= mMaxVertex; i++) {
+            double angleSin = Math.sin(mAngle * i + mRotateAngle);
+            double angleCos = Math.cos(mAngle * i + mRotateAngle);
+            drawVertexText(canvas, i, angleSin, angleCos);
+            drawVertexLine(canvas, angleSin, angleCos);
+        }
+    }
+
+    private void drawVertexText(Canvas canvas, int index, double angleSin, double angleCos) {
+        float x = (float) (mPointCenter.x + angleSin * (mRadius + mVertexTextOffset));
+        float y = (float) (mPointCenter.y + angleCos * (mRadius + mVertexTextOffset));
+        String text = mVertexText.get(index - 1);
+        float textWidth = mVertexTextPaint.measureText(text);
+        Paint.FontMetrics fontMetrics = mVertexTextPaint.getFontMetrics();
+        float textHeight = fontMetrics.descent - fontMetrics.ascent;
+        canvas.drawText(text, x - textWidth / 2, y + textHeight / 4, mVertexTextPaint);
+    }
+
+    private void drawVertexLine(Canvas canvas, double angleSin, double angleCos) {
         if (!mRadarLineEnable) {
             return;
         }
-        for (int i = 1; i <= mMaxVertex; i++) {
-            Path p = new Path();
-            p.moveTo(mPointCenter.x, mPointCenter.y);
-            float x = (float) (mPointCenter.x + Math.sin(mAngle * i + mRotateAngle) * mRadius);
-            float y = (float) (mPointCenter.y + Math.cos(mAngle * i + mRotateAngle) * mRadius);
-            p.lineTo(x, y);
-            canvas.drawPath(p, mRadarLinePaint);
-        }
+        float x = (float) (mPointCenter.x + angleSin * mRadius);
+        float y = (float) (mPointCenter.y + angleCos * mRadius);
+        canvas.drawLine(mPointCenter.x, mPointCenter.y, x, y, mRadarLinePaint);
     }
-
-    private void drawVertex(Canvas canvas) {
-        for (int i = 1; i <= mMaxVertex; i++) {
-            float x = (float) (mPointCenter.x + Math.sin(mAngle * i + mRotateAngle) * (mRadius + mVertexTextOffset));
-            float y = (float) (mPointCenter.y + Math.cos(mAngle * i + mRotateAngle) * (mRadius + mVertexTextOffset));
-            String text = mVertexText.get(i - 1);
-            float textWidth = mVertexTextPaint.measureText(text);
-            Paint.FontMetrics fontMetrics = mVertexTextPaint.getFontMetrics();
-            float textHeight = fontMetrics.descent - fontMetrics.ascent;
-            canvas.drawText(text, x - textWidth / 2, y + textHeight / 4, mVertexTextPaint);
-        }
-    }
-
 
     private void drawData(Canvas canvas) {
         for (int i = 0; i < mRadarData.size(); i++) {
@@ -395,7 +426,7 @@ public class RadarView extends View {
             mValueTextPaint.setTextSize(dp2px(radarData.getValueTextSize()));
             mValueTextPaint.setColor(radarData.getVauleTextColor());
             List<Float> values = radarData.getValue();
-            Path p = new Path();
+            mRadarPath.reset();
             PointF[] textPoint = new PointF[values.size()];
             for (int j = 1; j <= values.size(); j++) {
                 float value = values.get(j - 1);
@@ -403,19 +434,19 @@ public class RadarView extends View {
                 float x = (float) (mPointCenter.x + Math.sin(mAngle * j + mRotateAngle) * mRadius * percent);
                 float y = (float) (mPointCenter.y + Math.cos(mAngle * j + mRotateAngle) * mRadius * percent);
                 if (j == 1) {
-                    p.moveTo(x, y);
+                    mRadarPath.moveTo(x, y);
                 } else {
-                    p.lineTo(x, y);
+                    mRadarPath.lineTo(x, y);
                 }
                 textPoint[j - 1] = new PointF(x, y);
             }
-            p.close();
+            mRadarPath.close();
             mValuePaint.setAlpha(255);
             mValuePaint.setStyle(Paint.Style.STROKE);
-            canvas.drawPath(p, mValuePaint);
+            canvas.drawPath(mRadarPath, mValuePaint);
             mValuePaint.setStyle(Paint.Style.FILL);
             mValuePaint.setAlpha(150);
-            canvas.drawPath(p, mValuePaint);
+            canvas.drawPath(mRadarPath, mValuePaint);
             if (radarData.isValueTextEnable()) {
                 List<String> valueText = radarData.getValueText();
                 for (int k = 0; k < textPoint.length; k++) {
@@ -429,18 +460,11 @@ public class RadarView extends View {
         }
     }
 
-
     private void calcRadius() {
         if (mVertexText == null || mVertexText.size() == 0) {
             mRadius = Math.min(mPointCenter.x, mPointCenter.y) - mVertexTextOffset;
         } else {
-            String maxText = Collections.max(mVertexText, new Comparator<String>() {
-                @Override
-                public int compare(String lhs, String rhs) {
-                    return lhs.length() - rhs.length();
-                }
-            });
-            float maxTextWidth = mVertexTextPaint.measureText(maxText);
+            float maxTextWidth = mVertexTextPaint.measureText(mMaxLengthVertexText);
             if (mVertexTextOffset == 0) {
                 Paint.FontMetrics fontMetrics = mVertexTextPaint.getFontMetrics();
                 float textHeight = fontMetrics.descent - fontMetrics.ascent;
@@ -473,10 +497,12 @@ public class RadarView extends View {
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             if (Math.abs(velocityX) > Math.abs(velocityY)) {
                 mFlingPoint = e2.getX();
-                mScroller.fling((int) e2.getX(), 0, (int) velocityX, 0, (int) (-mPerimeter + e2.getX()), (int) (mPerimeter + e2.getX()), 0, 0);
+                mScroller.fling((int) e2.getX(), 0, (int) velocityX, 0, (int) (-mPerimeter + e2.getX()),
+                        (int) (mPerimeter + e2.getX()), 0, 0);
             } else if (Math.abs(velocityY) > Math.abs(velocityX)) {
                 mFlingPoint = e2.getY();
-                mScroller.fling(0, (int) e2.getY(), 0, (int) velocityY, 0, 0, (int) (-mPerimeter + e2.getY()), (int) (mPerimeter + e2.getY()));
+                mScroller.fling(0, (int) e2.getY(), 0, (int) velocityY, 0, 0, (int) (-mPerimeter + e2.getY()),
+                        (int) (mPerimeter + e2.getY()));
             }
             invalidate();
             return super.onFling(e1, e2, velocityX, velocityY);
@@ -492,6 +518,7 @@ public class RadarView extends View {
             mRotateOrientation = dis;
             return super.onScroll(e1, e2, distanceX, distanceY);
         }
+
     }
 
     @Override
@@ -522,8 +549,6 @@ public class RadarView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mWidth = w;
-        mHeight = h;
         mPointCenter = new PointF(w / 2, h / 2);
     }
 
