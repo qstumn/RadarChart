@@ -31,6 +31,7 @@
      compile 'q.rorbin:RadarView:VERSION_CODE
 ```
 VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
+
 ###2. xml
 ```xml
      <rorbin.q.radarview.RadarView
