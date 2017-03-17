@@ -1,6 +1,13 @@
 # RadarView
 一个可以自由定制、旋转交互的Android雷达图Lib
 
+##Change Log
+ ```
+v1.0.1
+1、修复addData添加多组数据时，只有最后一组数据显示出来的BUG
+2、修复animeValue方法重复执行时会错误的丢失数据的BUG
+```
+
 ![](https://github.com/qstumn/RadarView/blob/master/logo.png?raw=true)
 
 ###一些特性
@@ -21,16 +28,16 @@
 * 数据区支持设置值的描述文字
 
 * 所有的文字、雷达网、线、数据区颜色和大小均可定制
- 
+
 ![](https://github.com/qstumn/RadarView/blob/master/demo.gif?raw=true)
 
 
 ## how to use:
 ###1. gradle
 ```groovy
-     compile 'q.rorbin:RadarView:VERSION_CODE'
+     compile 'q.rorbin:RadarView:1.0.1'
 ```
-VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
+
 ###2. xml
 ```xml
      <rorbin.q.radarview.RadarView
@@ -60,9 +67,8 @@ app:vertex_text_offset | setVertexTextOffset | 顶点文字距最外层网偏移
   --- | ---
 setLayerColor | 设置雷达网各层颜色
 setVertexText | 设置顶点文字内容
-animeValue | 展现一次数据添加动画
-addData | 添加数据
-setEmptyHint | 设置空数据时的提示
+ animeValue | 展现一次数据添加动画
+ addData | 添加数据
  
 ###5. 添加数据
  1. 创建并添加数据
