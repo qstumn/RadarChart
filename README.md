@@ -21,7 +21,7 @@
 * 数据区支持设置值的描述文字
 
 * 所有的文字、雷达网、线、数据区颜色和大小均可定制
-
+ 
 ![](https://github.com/qstumn/RadarView/blob/master/demo.gif?raw=true)
 
 
@@ -30,7 +30,7 @@
 ```groovy
      compile 'q.rorbin:RadarView:VERSION_CODE'
 ```
-VERSION_CODE : [here]{https://github.com/qstumn/RadarChart/releases}
+VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
 ###2. xml
 ```xml
      <rorbin.q.radarview.RadarView
