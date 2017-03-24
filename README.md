@@ -84,7 +84,10 @@ mRadarView.addData(data);
   setValueTextEnable | 是否显示描述
   setValueTextSize | 描述的文字大小
   setVauleTextColor | 描述的文字颜色
-       
+
+### 6. 更新计划
+添加点击事件接口
+
 # LICENSE
 ```
 Copyright 2016, RorbinQiu
