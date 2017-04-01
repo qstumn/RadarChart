@@ -28,7 +28,7 @@
 ## how to use:
 ### 1. gradle
 ```groovy
-     compile 'q.rorbin:RadarView:VERSION_CODE'
+     compile 'q.rorbin:RadarView:1.0.2'
 ```
 VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
 
