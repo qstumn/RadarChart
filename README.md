@@ -1,4 +1,6 @@
 # RadarView
+[ ![Download](https://api.bintray.com/packages/qstumn/maven/RadarView/images/download.svg) ](https://bintray.com/qstumn/maven/RadarView/_latestVersion)
+
 一个可以自由定制、旋转交互的Android雷达图Lib
 
 ![](https://github.com/qstumn/RadarView/blob/master/logo.png?raw=true)
