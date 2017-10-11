@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="RadarView">
-        <attr name="radar_layer" format="integer"/>
+        <attr name="radar_layer" format="integer" />
         <attr name="rotation_enable" format="boolean" />
         <attr name="web_mode" format="enum">
             <enum name="polygon" value="1" />
             <enum name="circle" value="2" />
         </attr>
         <attr name="max_value" format="float" />
+
         <attr name="radar_line_color" format="color" />
         <attr name="radar_line_enable" format="boolean" />
         <attr name="radar_line_width" format="dimension" />
         <attr name="vertex_text_color" format="color" />
         <attr name="vertex_text_size" format="dimension" />
+        <attr name="vertex_icon_size" format="dimension" />
+        <attr name="vertex_icon_position" format="enum">
+            <enum name="left" value="1" />
+            <enum name="right" value="2" />
+            <enum name="top" value="3" />
+            <enum name="bottom" value="4" />
+            <enum name="center" value="5" />
+        </attr>
+        <attr name="vertex_icon_margin" format="dimension" />
+        <attr name="center_text_color" format="color" />
+        <attr name="center_text_size" format="dimension" />
         <attr name="vertex_text_offset" format="dimension" />
+
+        <attr name="center_text" format="string" />
+        <attr name="vertex_text" format="reference" />
+
+
     </declare-styleable>
 </resources>

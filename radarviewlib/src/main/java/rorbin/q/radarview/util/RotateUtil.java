@@ -55,4 +55,22 @@ public class RotateUtil {
             angle += CIRCLE_ANGLE;
         return angle % CIRCLE_ANGLE;
     }
+
+    public static int[] geometricScaling(int width, int height,
+                                         float displaySize) {
+        int[] size = new int[2];
+        if (width > height) {
+            height = (int) (height / (width / displaySize));
+            width = (int) displaySize;
+        } else if (width < height) {
+            width = (int) (width / (height / displaySize));
+            height = (int) displaySize;
+        } else {
+            width = (int) displaySize;
+            height = (int) displaySize;
+        }
+        size[0] = width;
+        size[1] = height;
+        return size;
+    }
 }

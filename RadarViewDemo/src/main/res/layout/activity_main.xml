@@ -14,5 +14,8 @@
     <rorbin.q.radarview.RadarView
         android:id="@+id/radarView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        app:vertex_icon_size="30dp"
+        app:vertex_text_offset="30dp"
+        app:vertex_icon_position="top"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

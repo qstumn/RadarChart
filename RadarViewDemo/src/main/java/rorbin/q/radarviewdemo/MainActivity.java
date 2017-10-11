@@ -1,5 +1,6 @@
 package rorbin.q.radarviewdemo;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,9 +30,16 @@ public class MainActivity extends AppCompatActivity {
         List<String> vertexText = new ArrayList<>();
         Collections.addAll(vertexText, "力量", "敏捷", "速度", "智力", "精神", "耐力", "体力", "魔力", "意志", "幸运");
         mRadarView.setVertexText(vertexText);
+        List<Integer> res = new ArrayList<>();
+        Collections.addAll(res, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
+                R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
+                R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        mRadarView.setVertexIconResid(res);
         List<Float> values = new ArrayList<>();
         Collections.addAll(values, 3f, 6f, 2f, 7f, 5f, 1f, 4f, 3f, 8f, 5f);
         RadarData data = new RadarData(values);
+        data.setValueTextEnable(true);
+        data.setVauleTextColor(Color.WHITE);
         List<Float> values2 = new ArrayList<>();
         Collections.addAll(values2, 7f, 1f, 4f, 2f, 8f, 3f, 9f, 6f, 5f, 3f);
         RadarData data2 = new RadarData(values2);
