@@ -18,6 +18,8 @@
 
 * 扇区（顶点）个数无限制
 
+* 顶点描述支持图文混排
+
 * 支持添加多组数据
 
 * 数据区支持设置值的描述文字
@@ -30,7 +32,7 @@
 ## how to use:
 ### 1. gradle
 ```groovy
-     compile 'q.rorbin:RadarView:1.0.2'
+     compile 'q.rorbin:RadarView:1.0.3'
 ```
 VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
 
@@ -53,19 +55,31 @@ app:max_value | setMaxValue | 最外圈的值
 app:radar_line_color | setRadarLineColor | 雷达网线条颜色
 app:radar_line_width | setRadarLineWidth | 雷达网线条大小
 app:radar_line_enable | setRadarLineEnable | 是否显示雷达网线条
+app:vertex_text | setVertexText | 顶点文字内容(字符串数组)
 app:vertex_text_color | setVertexTextColor | 顶点文字颜色
 app:vertex_text_size | setVertexTextSize | 顶点文字大小
-app:vertex_text_offset | setVertexTextOffset | 顶点文字距最外层网偏移量
+app:vertex_icon_size | setVertexIconSize | 顶点图片的尺寸限制值
+app:vertex_icon_position | setVertexIconPosition | 顶点图片相对于顶点文字的位置
+app:vertex_icon_margin | setVertexIconMargin | 顶点图片相对于顶点文字的间距
+app:vertex_text_offset | setVertexTextOffset | 顶点图文距最外层网偏移量
+app:center_text_color | setCenterTextColor | 中心文字颜色
+app:center_text_size | setCenterTextSize | 中心文字大小
+app:center_text | setCenterText | 中心文字内容
+
 注：各属性均有默认值
 
 ### 4. 方法说明
   code | 说明
   --- | ---
 setLayerColor | 设置雷达网各层颜色
-setVertexText | 设置顶点文字内容
 animeValue | 展现一次数据添加动画
 addData | 添加数据
+removeRadarData | 删除一组数据
+clearRadarData | 删除所有数据
 setEmptyHint | 设置空数据时的提示
+setMaxValue | 设置数据区最大限制值
+setMaxValues | 设置数据区各顶点最大限制值
+setVertexIconBitmap setVertexIconResid | 设置顶点图片内容
  
 ### 5. 添加数据
  1. 创建并添加数据
