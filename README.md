@@ -65,6 +65,7 @@ app:vertex_text_offset | setVertexTextOffset | 顶点图文距最外层网偏移
 app:center_text_color | setCenterTextColor | 中心文字颜色
 app:center_text_size | setCenterTextSize | 中心文字大小
 app:center_text | setCenterText | 中心文字内容
+
 注：各属性均有默认值
 
 ### 4. 方法说明
