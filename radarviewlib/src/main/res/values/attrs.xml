@@ -9,9 +9,10 @@
         </attr>
         <attr name="max_value" format="float" />
 
-        <attr name="radar_line_color" format="color" />
-        <attr name="radar_line_enable" format="boolean" />
-        <attr name="radar_line_width" format="dimension" />
+        <attr name="vertex_line_color" format="color" />
+        <attr name="vertex_line_width" format="dimension" />
+        <attr name="layer_line_color" format="color" />
+        <attr name="layer_line_width" format="dimension" />
         <attr name="vertex_text_color" format="color" />
         <attr name="vertex_text_size" format="dimension" />
         <attr name="vertex_icon_size" format="dimension" />
@@ -31,5 +32,9 @@
         <attr name="vertex_text" format="reference" />
 
 
+        //Deprecated
+        <attr name="radar_line_color" format="color" />
+        <attr name="radar_line_enable" format="boolean" />
+        <attr name="radar_line_width" format="dimension" />
     </declare-styleable>
 </resources>

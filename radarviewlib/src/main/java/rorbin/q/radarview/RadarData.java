@@ -15,8 +15,9 @@ public class RadarData {
     private List<Float> mValue;
     private int mColor;
     private List<String> mValueText;
+    private float mLineWidth;
     private int mVauleTextColor;
-    private int mValueTextSize;
+    private float mValueTextSize;
     private boolean mValueTextEnable;
 
     public RadarData(List<Float> value) {
@@ -27,13 +28,18 @@ public class RadarData {
         this(label, value, new RandomColor().randomColor());
     }
 
+    public RadarData(List<Float> value, int color) {
+        this("data", value, color);
+    }
+
     public RadarData(String label, List<Float> value, int color) {
         this.mLabel = label;
         this.mValue = value;
         this.mColor = color;
         initValueText();
         mVauleTextColor = 0xFF9E9E9E;
-        mValueTextSize = 10;
+        mValueTextSize = 30;
+        mLineWidth = 1;
         mValueTextEnable = false;
     }
 
@@ -70,11 +76,11 @@ public class RadarData {
         this.mVauleTextColor = mVauleTextColor;
     }
 
-    public int getValueTextSize() {
+    public float getValueTextSize() {
         return mValueTextSize;
     }
 
-    public void setValueTextSize(int mValueTextSize) {
+    public void setValueTextSize(float mValueTextSize) {
         this.mValueTextSize = mValueTextSize;
     }
 
@@ -92,6 +98,14 @@ public class RadarData {
 
     public void setValueText(List<String> mValueText) {
         this.mValueText = mValueText;
+    }
+
+    public float getLineWidth() {
+        return mLineWidth;
+    }
+
+    public void setLineWidth(float width) {
+        this.mLineWidth = width;
     }
 
     private void initValueText() {

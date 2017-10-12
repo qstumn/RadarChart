@@ -22,28 +22,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         mRadarView = (RadarView) findViewById(R.id.radarView);
+
         mRadarView.setEmptyHint("无数据");
+
         List<Integer> layerColor = new ArrayList<>();
         Collections.addAll(layerColor, 0x3300bcd4, 0x3303a9f4, 0x335677fc, 0x333f51b5, 0x33673ab7);
         mRadarView.setLayerColor(layerColor);
+
         List<String> vertexText = new ArrayList<>();
         Collections.addAll(vertexText, "力量", "敏捷", "速度", "智力", "精神", "耐力", "体力", "魔力", "意志", "幸运");
         mRadarView.setVertexText(vertexText);
+
         List<Integer> res = new ArrayList<>();
-        Collections.addAll(res, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-                R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher,
-                R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        Collections.addAll(res, R.mipmap.power, R.mipmap.agile, R.mipmap.speed,
+                R.mipmap.intelligence, R.mipmap.spirit, R.mipmap.endurance,
+                R.mipmap.strength, R.mipmap.magic, R.mipmap.will, R.mipmap.lucky);
         mRadarView.setVertexIconResid(res);
+
         List<Float> values = new ArrayList<>();
-        Collections.addAll(values, 3f, 6f, 2f, 7f, 5f, 1f, 4f, 3f, 8f, 5f);
+        Collections.addAll(values, 3f, 6f, 2f, 7f, 5f, 1f, 9f, 3f, 8f, 5f);
         RadarData data = new RadarData(values);
-        data.setValueTextEnable(true);
-        data.setVauleTextColor(Color.WHITE);
-        List<Float> values2 = new ArrayList<>();
-        Collections.addAll(values2, 7f, 1f, 4f, 2f, 8f, 3f, 9f, 6f, 5f, 3f);
-        RadarData data2 = new RadarData(values2);
         mRadarView.addData(data);
+
+        List<Float> values2 = new ArrayList<>();
+        Collections.addAll(values2, 7f, 1f, 4f, 2f, 8f, 3f, 4f, 6f, 5f, 3f);
+        RadarData data2 = new RadarData(values2);
+        data2.setValueTextEnable(true);
+        data2.setVauleTextColor(Color.WHITE);
+        data2.setValueTextSize(dp2px(10));
+        data2.setLineWidth(dp2px(1));
         mRadarView.addData(data2);
     }
 
@@ -79,5 +88,10 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private float dp2px(float dpValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return dpValue * scale + 0.5f;
     }
 }

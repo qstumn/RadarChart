@@ -48,9 +48,11 @@ public class RadarView extends View {
 
     private float mRadius;
     private PointF mPointCenter;
-    private int mRadarLineColor;
-    private float mRadarLineWidth;
-    private boolean mRadarLineEnable;
+    private int mLayerLineColor;
+    private float mLayerLineWidth;
+    private int mVertexLineColor;
+    private float mVertexLineWidth;
+
     private int mLayer;
     private List<Integer> mLayerColor;
     private float mMaxValue;
@@ -118,14 +120,15 @@ public class RadarView extends View {
         mRotationEnable = typedArray.getBoolean(R.styleable.RadarView_rotation_enable, true);
         mWebMode = typedArray.getInt(R.styleable.RadarView_web_mode, WEB_MODE_POLYGON);
         mMaxValue = typedArray.getFloat(R.styleable.RadarView_max_value, 0);
-        mRadarLineColor = typedArray.getColor(R.styleable.RadarView_radar_line_color, 0xFF9E9E9E);
-        mRadarLineEnable = typedArray.getBoolean(R.styleable.RadarView_radar_line_enable, true);
-        mRadarLineWidth = typedArray.getDimension(R.styleable.RadarView_radar_line_width, dp2px(1));
-        mVertexTextColor = typedArray.getColor(R.styleable.RadarView_vertex_text_color, mRadarLineColor);
+        mLayerLineColor = typedArray.getColor(R.styleable.RadarView_layer_line_color, 0xFF9E9E9E);
+        mLayerLineWidth = typedArray.getDimension(R.styleable.RadarView_layer_line_width, dp2px(1));
+        mVertexLineColor = typedArray.getColor(R.styleable.RadarView_vertex_line_color, 0xFF9E9E9E);
+        mVertexLineWidth = typedArray.getDimension(R.styleable.RadarView_vertex_line_width, dp2px(1));
+        mVertexTextColor = typedArray.getColor(R.styleable.RadarView_vertex_text_color, mVertexLineColor);
         mVertexTextSize = typedArray.getDimension(R.styleable.RadarView_vertex_text_size, dp2px(12));
         mVertexTextOffset = typedArray.getDimension(R.styleable.RadarView_vertex_text_offset, 0);
-        mCenterTextColor = typedArray.getColor(R.styleable.RadarView_center_text_color, mRadarLineColor);
-        mCenterTextSize = typedArray.getDimension(R.styleable.RadarView_center_text_size, dp2px(18));
+        mCenterTextColor = typedArray.getColor(R.styleable.RadarView_center_text_color, mVertexLineColor);
+        mCenterTextSize = typedArray.getDimension(R.styleable.RadarView_center_text_size, dp2px(30));
         mCenterText = typedArray.getString(R.styleable.RadarView_center_text);
         mVertexIconSize = typedArray.getDimension(R.styleable.RadarView_vertex_icon_size, dp2px(20));
         mVertexIconPosition = typedArray.getInt(R.styleable.RadarView_vertex_icon_position, VERTEX_ICON_POSITION_TOP);
@@ -163,9 +166,13 @@ public class RadarView extends View {
         mVertexTextPaint = new TextPaint();
         mValueTextPaint = new TextPaint();
         mCenterTextPaint = new TextPaint();
+
         mRadarLinePaint.setAntiAlias(true);
+        mLayerPaint.setAntiAlias(true);
         mVertexTextPaint.setAntiAlias(true);
         mCenterTextPaint.setAntiAlias(true);
+        mValueTextPaint.setAntiAlias(true);
+        mValuePaint.setAntiAlias(true);
         mValueTextPaint.setFakeBoldText(true);
 
         mVertexIconRect = new RectF();
@@ -195,33 +202,6 @@ public class RadarView extends View {
             throw new IllegalStateException("only support WEB_MODE_POLYGON or WEB_MODE_CIRCLE");
         }
         this.mWebMode = webMode;
-        invalidate();
-    }
-
-    public int getRadarLineColor() {
-        return mRadarLineColor;
-    }
-
-    public void setRadarLineColor(int radarLineColor) {
-        this.mRadarLineColor = radarLineColor;
-        invalidate();
-    }
-
-    public float getRadarLineWidth() {
-        return mRadarLineWidth;
-    }
-
-    public void setRadarLineWidth(float radarLineWidth) {
-        this.mRadarLineWidth = radarLineWidth;
-        invalidate();
-    }
-
-    public boolean isRadarLineEnable() {
-        return mRadarLineEnable;
-    }
-
-    public void setRadarLineEnable(boolean radarLineEnable) {
-        this.mRadarLineEnable = radarLineEnable;
         invalidate();
     }
 
@@ -406,6 +386,42 @@ public class RadarView extends View {
         this.mRotationEnable = enable;
     }
 
+    public int getLayerLineColor() {
+        return mLayerLineColor;
+    }
+
+    public void setLayerLineColor(int color) {
+        this.mLayerLineColor = color;
+        invalidate();
+    }
+
+    public float getLayerLineWidth() {
+        return mLayerLineWidth;
+    }
+
+    public void setLayerLineWidth(float width) {
+        this.mLayerLineWidth = width;
+        invalidate();
+    }
+
+    public int getVertexLineColor() {
+        return mVertexLineColor;
+    }
+
+    public void setVertexLineColor(int color) {
+        this.mVertexLineColor = color;
+        invalidate();
+    }
+
+    public float getVertexLineWidth() {
+        return mVertexLineWidth;
+    }
+
+    public void setVertexLineWidth(float width) {
+        this.mVertexLineWidth = width;
+        invalidate();
+    }
+
     public void animeValue(int duration) {
         for (RadarData radarData : mRadarData) {
             animeValue(duration, radarData);
@@ -498,12 +514,9 @@ public class RadarView extends View {
     }
 
     private void initPaint() {
-        mRadarLinePaint.setStrokeWidth(mRadarLineWidth);
-        mRadarLinePaint.setColor(mRadarLineColor);
         mRadarLinePaint.setStyle(Paint.Style.STROKE);
         mVertexTextPaint.setColor(mVertexTextColor);
         mVertexTextPaint.setTextSize(mVertexTextSize);
-        mValuePaint.setStrokeWidth(dp2px(1));
         mLayerPaint.setStyle(Paint.Style.FILL);
         mCenterTextPaint.setTextSize(mCenterTextSize);
         mCenterTextPaint.setColor(mCenterTextColor);
@@ -539,7 +552,9 @@ public class RadarView extends View {
                 mLayerPaint.setColor(layerColor);
                 canvas.drawPath(mRadarPath, mLayerPaint);
             }
-            if (mRadarLineEnable) {
+            if (mLayerLineWidth > 0) {
+                mRadarLinePaint.setColor(mLayerLineColor);
+                mRadarLinePaint.setStrokeWidth(mLayerLineWidth);
                 canvas.drawPath(mRadarPath, mRadarLinePaint);
             }
         }
@@ -553,7 +568,9 @@ public class RadarView extends View {
                 mLayerPaint.setColor(layerColor);
                 canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mLayerPaint);
             }
-            if (mRadarLineEnable) {
+            if (mLayerLineWidth > 0) {
+                mRadarLinePaint.setColor(mLayerLineColor);
+                mRadarLinePaint.setStrokeWidth(mLayerLineWidth);
                 canvas.drawCircle(mPointCenter.x, mPointCenter.y, radius, mRadarLinePaint);
             }
         }
@@ -633,11 +650,13 @@ public class RadarView extends View {
     }
 
     private void drawVertexLine(Canvas canvas, double angleSin, double angleCos) {
-        if (!mRadarLineEnable) {
+        if (mVertexLineWidth <= 0) {
             return;
         }
         float x = (float) (mPointCenter.x + angleSin * mRadius);
         float y = (float) (mPointCenter.y - angleCos * mRadius);
+        mRadarLinePaint.setColor(mVertexLineColor);
+        mRadarLinePaint.setStrokeWidth(mVertexLineWidth);
         canvas.drawLine(mPointCenter.x, mPointCenter.y, x, y, mRadarLinePaint);
     }
 
@@ -645,7 +664,7 @@ public class RadarView extends View {
         for (int i = 0; i < mRadarData.size(); i++) {
             RadarData radarData = mRadarData.get(i);
             mValuePaint.setColor(radarData.getColor());
-            mValueTextPaint.setTextSize(dp2px(radarData.getValueTextSize()));
+            mValueTextPaint.setTextSize(radarData.getValueTextSize());
             mValueTextPaint.setColor(radarData.getVauleTextColor());
             List<Float> values = radarData.getValue();
             mRadarPath.reset();
@@ -681,6 +700,7 @@ public class RadarView extends View {
             mRadarPath.close();
             mValuePaint.setAlpha(255);
             mValuePaint.setStyle(Paint.Style.STROKE);
+            mValuePaint.setStrokeWidth(radarData.getLineWidth());
             canvas.drawPath(mRadarPath, mValuePaint);
             mValuePaint.setStyle(Paint.Style.FILL);
             mValuePaint.setAlpha(150);
@@ -727,6 +747,14 @@ public class RadarView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                getParent().requestDisallowInterceptTouchEvent(mRotationEnable);
+                break;
+            case MotionEvent.ACTION_UP:
+                getParent().requestDisallowInterceptTouchEvent(false);
+                break;
+        }
         if (!mRotationEnable) return super.onTouchEvent(event);
         return mDetector.onTouchEvent(event);
     }
@@ -802,5 +830,45 @@ public class RadarView extends View {
     private float dp2px(float dpValue) {
         final float scale = mContext.getResources().getDisplayMetrics().density;
         return dpValue * scale + 0.5f;
+    }
+
+
+    @Deprecated
+    /**
+     use {@link RadarView#getLayerLineColor()} or {@link RadarView#getVertexLineColor()}
+     */
+    public int getRadarLineColor() {
+        return -1;
+    }
+
+    @Deprecated
+    /**
+     use {@link RadarView#setLayerLineColor()} or {@link RadarView#setVertexLineColor()}
+     */
+    public void setRadarLineColor(int radarLineColor) {
+    }
+
+    @Deprecated
+    /**
+     use {@link RadarView#getLayerLineWidth()} or {@link RadarView#getVertexLineWidth()}
+     */
+    public float getRadarLineWidth() {
+        return -1;
+    }
+
+    @Deprecated
+    /**
+     use {@link RadarView#setLayerLineWidth()} or {@link RadarView#setVertexLineWidth()}
+     */
+    public void setRadarLineWidth(float radarLineWidth) {
+    }
+
+    @Deprecated
+    public boolean isRadarLineEnable() {
+        return false;
+    }
+
+    @Deprecated
+    public void setRadarLineEnable(boolean radarLineEnable) {
     }
 }
