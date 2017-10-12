@@ -32,7 +32,7 @@
 ## how to use:
 ### 1. gradle
 ```groovy
-     compile 'q.rorbin:RadarView:1.0.3'
+     compile 'q.rorbin:RadarView:1.0.4'
 ```
 VERSION_CODE : [here](https://github.com/qstumn/RadarChart/releases)
 
@@ -52,9 +52,10 @@ app:radar_layer | setLayer | 雷达网层数
 app:rotation_enable | setRotationEnable | 是否打开手势旋转
 app:web_mode | setWebMode | 雷达网模式(多边形、圆形...)
 app:max_value | setMaxValue | 最外圈的值
-app:radar_line_color | setRadarLineColor | 雷达网线条颜色
-app:radar_line_width | setRadarLineWidth | 雷达网线条大小
-app:radar_line_enable | setRadarLineEnable | 是否显示雷达网线条
+app:vertex_line_color | setVertexLineColor | 顶点连线颜色
+app:vertex_line_width | setVertexLineWidth | 顶点连线宽度
+app:layer_line_color | setLayerLineColor | 雷达网线条颜色
+app:layer_line_width | setLayerLineWidth | 雷达网线条宽度
 app:vertex_text | setVertexText | 顶点文字内容(字符串数组)
 app:vertex_text_color | setVertexTextColor | 顶点文字颜色
 app:vertex_text_size | setVertexTextSize | 顶点文字大小
@@ -96,7 +97,8 @@ mRadarView.addData(data);
   --- | ---
   setLabel | 数据的标注
   setValue | 设置（更改）数据值
-  setValueText | 数据值的描述
+  setLineWidth | 设置边线宽度
+  setValueText | 数据值的描述
   setValueTextEnable | 是否显示描述
   setValueTextSize | 描述的文字大小
   setVauleTextColor | 描述的文字颜色
